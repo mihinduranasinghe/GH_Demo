@@ -58,7 +58,7 @@ jobs:
 
             - name: Deploy to staging
               if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-              run: npx surge --project ./build --domain ${{DEV_DEPLOYMENT_URL}}
+              run: npx surge --project ./build --domain ${DEV_DEPLOYMENT_URL}
               env:
                   SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
                   SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
@@ -66,7 +66,7 @@ jobs:
 
             - name: Deploy to production
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              run: npx surge --project ./build --domain gainful-ghost.surge.sh
+              run: npx surge --project ./build --domain ${PROD_DEPLOYMENT_URL}
               env:
                   SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
                   SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
