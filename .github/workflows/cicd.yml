@@ -6,6 +6,10 @@ on:
     pull_request:
         branches: [develop, main]
 
+env:
+    DEV_DEPLOYMENT_URL: eight-circle.surge.sh
+    PROD_DEPLOYMENT_URL: gainful-ghost.surge.sh
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -52,17 +56,17 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-            # - name: Deploy to staging
-            #   if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-            #   run: npx surge --project ./build --domain eight-circle.surge.sh
-            #   env:
-            #       SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
-            #       SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
-            #       #To generate a surge token ->> surge token
+            - name: Deploy to staging
+              if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+              run: npx surge --project ./build --domain ${{DEV_DEPLOYMENT_URL}}
+              env:
+                  SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+                  SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
+                  #To generate a surge token ->> surge token
 
-            # - name: Deploy to production
-            #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-            #   run: npx surge --project ./build --domain gainful-ghost.surge.sh
-            #   env:
-            #       SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
-            #       SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
+            - name: Deploy to production
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              run: npx surge --project ./build --domain gainful-ghost.surge.sh
+              env:
+                  SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+                  SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
