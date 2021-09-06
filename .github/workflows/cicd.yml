@@ -1,7 +1,7 @@
 name: CI/CD with github actions
 on:
     push:
-        branches: [feature, develop, main]
+        branches: [develop, main]
 
     pull_request:
         branches: [develop, main]
@@ -46,11 +46,11 @@ jobs:
                   zip -r build.zip ./build
                   zip -r coverage.zip ./coverage
 
-            # - name: Create a Semantic Release
-            #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-            #   run: npx semantic-release
-            #   env:
-            #       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            - name: Create a Semantic Release
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              run: npx semantic-release
+              env:
+                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
             # - name: Deploy to staging
             #   if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
