@@ -38,7 +38,6 @@ jobs:
 
             - name: Upload build folder
               if: github.event_name == 'push'
-              #Upload build folder
               uses: actions/upload-artifact@v2
               with:
                   name: build #naming the folder
@@ -62,7 +61,6 @@ jobs:
               env:
                   SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
                   SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
-                  #To generate a surge token ->> surge token
 
             - name: Deploy to production
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
