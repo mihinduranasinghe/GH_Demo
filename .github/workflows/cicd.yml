@@ -1,0 +1,68 @@
+name: CI/CD with github actions
+on:
+    push:
+        branches: [feature, develop, main]
+
+    pull_request:
+        branches: [develop, main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cloning repo into VM
+              uses: actions/checkout@v2.3.4
+
+            - name: Cache node modules
+              uses: actions/cache@v2.1.3
+              with:
+                  path: ~/.npm
+                  # for linux
+                  key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json')}}
+                  restore-key: |
+                      ${{runner.os}}-node-
+
+            - run: npm ci
+
+            - run: npm test -- --coverage
+              env:
+                  CI: true
+
+            - name: Build Project
+              if: github.event_name == 'push'
+              run: npm run build
+
+            - name: Upload build folder
+              if: github.event_name == 'push'
+              #Upload build folder
+              uses: actions/upload-artifact@v2
+              with:
+                  name: build #naming the folder
+                  path: build
+
+            - name: Zipping assets
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              run: |
+                  zip -r build.zip ./build
+                  zip -r coverage.zip ./coverage
+
+            # - name: Create a Semantic Release
+            #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+            #   run: npx semantic-release
+            #   env:
+            #       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+            # - name: Deploy to staging
+            #   if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+            #   run: npx surge --project ./build --domain eight-circle.surge.sh
+            #   env:
+            #       SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+            #       SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
+            #       #To generate a surge token ->> surge token
+
+            # - name: Deploy to production
+            #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+            #   run: npx surge --project ./build --domain gainful-ghost.surge.sh
+            #   env:
+            #       SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+            #       SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
