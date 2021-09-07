@@ -1,7 +1,7 @@
 name: CI/CD with github actions
 on:
     push:
-        branches: [feat, develop, main]
+        branches: [feature, develop, main]
 
     pull_request:
         branches: [develop, main]
