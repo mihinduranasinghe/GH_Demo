@@ -11,4 +11,4 @@ jobs:
             - name: Slack Message
               run: |
                   curl -X POST -H 'Content-type: application/json' \
-                  --data '{"text":"New Issue Created : in Tech Conference Demo - Sysco LABS <${{github.event.release.issue.html_url}} | ${{github.event.issue.title}}.>"}' ${{secrets.SLACK_WEBHOOK}}
+                  --data '{"text":"New Issue Created : Tech Conference Demo - Sysco LABS : <${{github.event.issue.html_url}} | ${{github.event.issue.title}}.>"}' ${{secrets.SLACK_WEBHOOK}}
